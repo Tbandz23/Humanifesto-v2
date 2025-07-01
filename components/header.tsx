@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Globe } from "lucide-react"
+import { Globe } from 'lucide-react'
 import { createClient } from "@/lib/supabase/server"
 import { logout } from "@/app/logout/actions"
 import MobileNav from "./mobile-nav"
+import type { User } from "@supabase/supabase-js"
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -15,9 +16,14 @@ const navLinks = [
 
 export default async function Header() {
   const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user: User | null = null
+
+  if (supabase) {
+    const {
+      data: { user: fetchedUser },
+    } = await supabase.auth.getUser()
+    user = fetchedUser
+  }
 
   return (
     <header className="bg-background/80 backdrop-blur-lg border-b sticky top-0 z-50">

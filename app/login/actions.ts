@@ -8,6 +8,11 @@ export async function login(formData: FormData) {
   const password = formData.get("password") as string
   const supabase = createClient()
 
+  // If supabase client couldn't be created, redirect with an error
+  if (!supabase) {
+    return redirect("/login?message=Could not authenticate user")
+  }
+
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -19,3 +24,4 @@ export async function login(formData: FormData) {
 
   return redirect("/")
 }
+

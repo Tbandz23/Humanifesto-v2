@@ -13,6 +13,11 @@ export async function signup(formData: FormData) {
   const bio = formData.get("bio") as string
   const supabase = createClient()
 
+  // If supabase client couldn't be created, redirect with an error
+  if (!supabase) {
+    return redirect("/join?message=Could not authenticate user")
+  }
+
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -30,6 +35,9 @@ export async function signup(formData: FormData) {
     console.error("Signup Error:", error)
     return redirect("/join?message=Could not authenticate user")
   }
+
+  return redirect("/join?message=Check email to continue sign in process")
+}
 
   return redirect("/join?message=Check email to continue sign in process")
 }
